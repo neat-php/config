@@ -63,15 +63,19 @@ class Config
      */
     private function initDirectory(DirectoryIterator $directory): array
     {
-        /** @var array[] $config */
-        $config = [];
+        $files = [];
         foreach ($directory as $file) {
             if ($file->getExtension() !== 'php') {
                 continue;
             }
+            $files[] = $file->getPathname();
+        }
+        sort($files);
+        /** @var array[] $config */
+        $config = [];
+        foreach ($files as $file) {
             /** @noinspection PhpIncludeInspection */
-            /** @var array $config */
-            $directoryConfig = require $file->getPathname();
+            $directoryConfig = require $file;
             $config[]        = $directoryConfig;
         }
 
